@@ -1,0 +1,272 @@
+<!-- /*
+1.引入js 
+2.写css
+3.插入容器
+*/ -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>搞得地图</title>
+    <script type="text/javascript"
+        src="http://webapi.amap.com/maps?v=1.4.11&key=f6ce9a844b66e39a2fcfa2cf2faf7bc8"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+
+        }
+
+        /* 地图容器 */
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        /* 事件容器  */
+        #setZoomNode,
+        #setCenterNode,
+        #setCenterAndZoom,
+        #getCity,
+        #setCity,
+        #getMapRange,
+        #setMapRange {
+            width: 300px;
+            height: 100px;
+            position: absolute;
+            z-index: 99;
+            right: 20px;
+            top: 20px;
+            border: 1px solid black;
+            box-shadow: 0 0 5px 0;
+        }
+
+        #setCenterNode {
+            top: 120px;
+        }
+
+        #searchNode {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            z-index: 99;
+            right: 20px;
+            top: 20px;
+            border: 1px solid black;
+            box-shadow: 0 0 5px 0;
+        }
+
+        #node li {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <!-- 设置级别 -->
+    <!-- <div id="setZoomNode">
+        <input type="text" name="" id="zoomValue">
+        <button id="btn1">确定</button>
+    </div>
+
+    设置中心点 -->
+    <!-- <div id="setCenterNode">
+        <input type="text" name="" id="xNode">
+        <input type="text" name="" id="yNode">
+        <button id="btn2">确定</button>
+    </div> -->
+    <!-- 同时设置级别和中心点
+    <div id="setCenterAndZoom">
+        <input type="text" name="" id="zoomValue">
+        <input type="text" name="" id="xNode">
+        <input type="text" name="" id="yNode">
+        <button id="btn3">确定</button>
+    </div> -->
+
+
+    <!-- 获取当前位置行政区 -->
+    <!-- 
+    <div id="getCity">
+        <input type="text" name="" id="showCity">
+        <button id="btn4">获取</button>
+    </div> -->
+    <!-- 设置当前行政区 -->
+    <!-- <div id="setCity">
+        <input type="text" name="" id="setCityVal">
+        <button id="btn5">设置</button>
+    </div>  -->
+
+    <!-- 获取地图的显示范围 -->
+    <!-- <div id="getMapRange">
+        <div>地图左上角图标：<span id="ne"></span></div>
+        <div> 地图右上角图标：<span id="sw"></span></div>
+        <div>目前鼠标经纬度为：<span id="xyNode"></span></div>
+    </div> -->
+
+    <!-- 地图搜索 -->
+   
+    
+
+    <!-- 插入容器 -->
+    <script type="text/javascript">
+
+        let map = new AMap.Map('container', {
+            //初始化级别
+            zoom: 10,
+            //初始化中心点
+            center: [120, 30]
+        })
+        //设置地图
+
+        // //通过事件设置级别
+        // btn1.onclick=function(){
+        //     map.setZoom(zoomValue.value);
+        // }
+
+        // //通过事件设置中心点
+        // btn2.onclick = function () {
+        //    map.setCenter([xNode.value,yNode.value]);
+        // }
+
+        // 同时设置级别和中心点
+        // btn3.onclick = function () {
+        //     map.setZoomAndCenter(zoomValue.value,[xNode.value,yNode.value]);
+        // }
+
+        //获取行政区
+        // map.getCity(
+        //     function (info) {
+        //         getCity.innerHTML = info.province + ',' + info.district;
+        //         // console.log(info);
+        //     })
+
+
+        // //设置行政区
+        // btn5.onclick = function () {
+        //     map.setCity(setCityVal.value)
+        // }
+
+        //获取地图的显示范围
+        // ne.innerHTML = map.getBounds().northeast.toString();
+        // sw.innerHTML = map.getBounds().southwest.toString();
+        // console.log(map.getBounds().northeast.toString());
+        // console.log( map.getBounds().southwest.toString());
+        //设置地图的显示范围
+        // btn5.onclick=function(){
+        // var myBounds=new AMap.Bounds([120.381088,30.358519],[119.618912,29.640182]);
+        // map.setBounds(myBounds);
+        // }
+
+        //限制地图显示范围
+        // var bounds=map.getBounds();
+        // //扩充范围
+        // bounds.northeast.R=118;
+        // map.setLimitBounds(bounds);
+        //取消限制
+        // map.clearLimitBounds(bounds);
+
+        //地图的平移 panBy  panTo直接移动到对应坐标
+        // setInterval(function(){
+        //     map.panBy(600*Math.random()-300,600*Math.random()-300);
+        // },3000)
+
+        //获取鼠标经纬度
+        // map.on('click',function(e){
+        //     xyNode.innerHTML=e.lnglat.lng+','+e.lnglat.lat;
+        //     map.setCenter([e.lnglat.lng,e.lnglat.lat]);
+        // })
+
+        //设置鼠标的样式
+        // map.setDefaultCursor('pointer')
+
+
+
+
+        // 地图搜索
+        // 1.加载插件
+        // 方法1
+        AMap.plugin('AMap.Autocomplete', function () {
+            searchText.oninput = function () {
+                node.innerHTML = '';
+                if (this.value == '') {
+                    return;
+                }
+                new AMap.Autocomplete().search(this.value, function (status, data) {
+                    for (var i = 0; i < data.tips.length; i++) {
+                        var oLi = document.createElement('li');
+                        oLi.innerHTML = data.tips[i].name;
+                        oLi.P=data.tips[i].location.P;
+                        oLi.R=data.tips[i].location.R;
+                        node.appendChild(oLi);
+                        oLi.onclick=function(){
+                          map.setCenter([this.R,this.P])
+                        };
+                    }
+                })
+            }
+        })
+
+        //方法2
+        // 1.在script中改src
+        // src="http://webapi.amap.com/maps?v=1.4.11&key=f6ce9a844b66e39a2fcfa2cf2faf7bc8&plugin=AMap.Autocomplete">
+
+        // new AMap.Autocomplete().search('北京', function (status, data) {
+        //     console.log(data.tips);
+        //             // for (var i = 0; i < data.tips.length; i++) {
+        //             //     var oLi = document.createElement('li');
+        //             //     oLi.innerHTML = data.tips[i].name;
+        //             //     oLi.P=data.tips[i].location.P;
+        //             //     oLi.R=data.tips[i].location.R;
+        //             //     node.appendChild(oLi);
+        //             //     oLi.onclick=function(){
+        //             //       map.setCenter([this.R,this.P])
+        //             //     };
+        //             // }
+        //         })
+
+        // //官方给的下拉框
+        // new AMap.Autocomplete({
+        //     input: 'searchText'
+        // })
+            
+
+
+
+
+
+
+
+        //事件监听
+        // //moveend地图移动结束触发
+        // map.on('moveend', function () {
+        //     //     console.log(map.getZoom());
+        //     //     console.log(map.getCenter().toString());
+
+
+        //     //显示行政区
+        //     //     map.getCity(
+        //     //     function (info) {
+        //     //         getCity.innerHTML = info.province + ',' + info.district;
+        //     //     })
+
+            //显示地图范围
+        //     ne.innerHTML = map.getBounds().northeast.toString();
+        //     sw.innerHTML = map.getBounds().southwest.toString();
+
+        // })
+        // //zoomend地图级别改变时触发
+        // map.on('zoomend', function () {
+        //     console.log(map.getZoom());
+        //     console.log(map.getCenter().toString())
+        // })
+    </script>
+
+</body>
+
+</html>

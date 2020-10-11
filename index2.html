@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>高德地图--POI</title>
+    <script type="text/javascript"
+        src="http://webapi.amap.com/maps?v=1.4.11&key=f6ce9a844b66e39a2fcfa2cf2faf7bc8"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+
+        }
+
+        /* 地图容器 */
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #PlaceSearchNode {
+            width: 300px;
+            position: absolute;
+            z-index: 99;
+            right: 20px;
+            top: 50px;
+            border: 1px solid black;
+            box-shadow: 0 0 5px 0;
+        }
+
+        #searchNode {
+            width: 280px;
+            height: 30px;
+            top: 50px;
+            background: white;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="searchNode">
+        <input type="" name=" " id="searchIpt">
+        <button id="btn">搜索</button>
+    </div>
+    <div id="PlaceSearchNode">
+    </div>
+    <script type="text/javascript">
+        //注册容器
+        let map = new AMap.Map('container', {
+            //初始化级别
+            zoom: 10,
+            //初始化中心点
+            center: [116.379391, 39.861536]
+        });
+
+        //注册服务
+        AMap.service(['AMap.PlaceSearch'], function () {
+            btn.onclick = function () {
+                // new AMap.PlaceSearch(
+                //     {
+
+                //         //一个页码显示几条
+                //         pageSize: 5,
+                //         //默认显示第几页
+                //         pageIndex: 1,
+                //         //在哪个城市搜索(区号)
+                //         city: '0573',
+                //         //是否限制在搜索区域内搜索
+                //         cityLimit:true,
+                //         //展示在那个地图里
+                //         map: map,
+                //         //搜的结果存放位置
+                //         panel:'PlaceSearchNode'
+                //     }
+                // ).search(searchIpt.value)
+
+              //搜索周边
+                new AMap.PlaceSearch(
+                    {
+                        //搜索的类型
+                        type: '餐饮',
+                        //一个页码显示几条
+                        pageSize: 5,
+                        //默认显示第几页
+                        pageIndex: 1,
+                        //在哪个城市搜索(区号)
+                        city: '010',
+                        //是否限制在搜索区域内搜索
+                        cityLimit: true,
+                        //展示在那个地图里
+                        map: map,
+                        //搜的结果存放位置
+                        panel: 'PlaceSearchNode'
+                    }).searchNearBy('', [116.379391, 39.861536], 200, function () {});
+            }
+        })
+
+    </script>
+
+</body>
+
+</html>

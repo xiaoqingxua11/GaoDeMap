@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>高德地图--POI3</title>
+    <script type="text/javascript"
+        src="http://webapi.amap.com/maps?v=1.4.11&key=f6ce9a844b66e39a2fcfa2cf2faf7bc8&plugin=AMap.Autocomplete,AMap.PlaceSearch"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+
+        }
+
+        /* 地图容器 */
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #PlaceSearchNode {
+            width: 300px;
+            position: absolute;
+            z-index: 99;
+            right: 20px;
+            top: 50px;
+            border: 1px solid black;
+            box-shadow: 0 0 5px 0;
+        }
+
+        #searchNode {
+            width: 280px;
+            height: 30px;
+            top: 50px;
+            background: white;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="searchNode">
+        <input type="" name=" " id="searchIpt">
+    </div>
+
+    <script type="text/javascript">
+        //注册容器
+        let map = new AMap.Map('container', {
+            //初始化级别
+            zoom: 10,
+            //初始化中心点
+            center: [120, 30]
+        });
+
+        var searchNode = new AMap.Autocomplete({
+            input: 'searchIpt'
+        });
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        })
+
+        //添加监听事件
+        AMap.event.addListener(searchNode, 'select', function (e) {       
+            placeSearch.search(e.poi.name)
+        });
+
+    </script>
+
+</body>
+
+</html>

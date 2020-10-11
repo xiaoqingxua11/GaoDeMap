@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>高德地图--驾车路线</title>
+    <script type="text/javascript"
+        src="http://webapi.amap.com/maps?v=1.4.11&key=f6ce9a844b66e39a2fcfa2cf2faf7bc8&plugin=AMap.Driving,AMap.Autocomplete,AMap.Scale,AMap.ToolBar,AMap.ControlBar,,AMap.Lnglat"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+
+        }
+
+        /* 地图容器 */
+        #container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #panel {
+            position: fixed;
+            background: white;
+            top: 10px;
+            right: 10px;
+            width: 280px;
+        }
+
+        #search {
+            width: 200px;
+            height: 120px;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            background: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div id="panel"></div>
+    <div id="search">
+        起点：<input type="" name="" id="startNode"></br>
+        终点：<input type="" name="" id="endNode">
+        <button id="btn">开始导航</button>
+    </div>
+
+
+    <script type="text/javascript">
+
+        var num = 0, arr = [];
+        //注册容器
+        let map = new AMap.Map('container', {
+            //初始化级别
+            zoom: 17,
+            //初始化中心点
+            center: [116.379391, 39.861536],
+            //维度
+            viewMode: '3D',
+            //视角度数
+            pitch: 90,
+            buildingAnimation: true
+        });
+
+        new AMap.Autocomplete({
+            input: 'startNode'
+        });
+        new AMap.Autocomplete({
+            input: 'endNode'
+        });
+
+        //通过输入的值来定位路线
+
+        btn.onclick = function () {
+            new AMap.Driving({
+                //显示到那个地图
+                map: map,
+                //显示到那个容器
+                panel: 'panel'
+            }).search([
+                {
+                    keyword: startNode.value,
+                    city: "嘉兴"
+                },
+                {
+                    keyword: endNode.value,
+                    city: "嘉兴"
+                }
+            ], function (status, data) {
+                console.log(data);
+            });
+        }
+        //通过点击来显示路线
+        map.on('click', function (e) {
+            // console.log(e.lnglat)
+            num++;
+            if (num % 2 == 1) {
+                arr = [e.lnglat.R, e.lnglat.P];
+            } 
+            else {
+                new AMap.Driving({
+                    //显示到那个地图
+                    map: map,
+                    //显示到那个容器
+                    panel: 'panel'
+                }).search(new AMap.LngLat(arr[0], arr[1]), new AMap.LngLat(e.lnglat.R, e.lnglat.P), function (status, data) {
+                    console.log(data);
+                })
+            }
+        })
+
+
+
+        //添加控件
+        // map.addControl(new AMap.Scale());
+        // map.addControl(new AMap.ToolBar());
+        map.addControl(new AMap.ControlBar({
+            //控制控件(x旋转控件)
+            showZoomBar: true,
+            //调整控件位置
+            position: {
+                top: '30px',
+                right: '250px'
+            }
+        }
+        ));
+
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
